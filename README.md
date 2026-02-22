@@ -1,6 +1,7 @@
 # pyGeoMechanics Documentation
 
 ## Overview
+
 The `pyGeoMechanics` library is a Python-based solution for geomechanical computations. It provides modular components for data ingestion, preprocessing, overburden stress calculations, pore pressure analysis, stratigraphy modeling, trajectory analysis, and utility functions. The architecture supports seamless integration into enterprise geomechanical workflows.
 
 ### Directory Structure
@@ -19,16 +20,16 @@ Custom_library/
 └── requirements.txt     # Project dependencies
 ```
 
----
-
 ## Installation and Setup
 
 ### 1. Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ### 2. Configuration Parameters
+
 The `executor.py` script accepts the following parameters:
 
 | Parameter | Type | Description |
@@ -45,6 +46,7 @@ The `executor.py` script accepts the following parameters:
 | `outlier_ranges` | dict | Valid ranges for log curves |
 
 #### Example Configuration
+
 ```json
 {
     "geological_zones": {
@@ -61,17 +63,24 @@ The `executor.py` script accepts the following parameters:
 ```
 
 ### 3. Execution Workflow
+
 ```bash
 python executor.py
 ```
 
 The application executes the following sequence:
+
 1. Data ingestion via `Ingestion.py`
 2. Data preprocessing via `Preprocessing.py`
 3. Geomechanical analysis using `Overburden.py`, `Pore_pressure.py`, `Stratigraphy.py`, `Trajectory.py`
-4. Results export to specified output directory
+4. Results export to `Data` output directory containing plots as PNG and data in CSV format
 
----
+### Output Examples
+
+- **Stratigraphy**: ![Stratigraphy](Data/Statigraphy.png)
+- **Overburden Stress**: ![Overburden Stress](Data/overburden_stress.png)
+- **Normal Compaction Trend**: ![Normal Compaction Trend](Data/nct.png)
+- **Pore Pressure**: ![Pore Pressure](Data/pore_pressure.png)
 
 ## Module Reference
 
@@ -80,9 +89,8 @@ The application executes the following sequence:
 | **Ingestion.py** | Reads and parses input data (CSV, LAS, Excel) |
 | **Preprocessing.py** | Data validation, cleaning, and normalization |
 | **Overburden.py** | Calculates vertical stress profiles |
-| **Porepressure.py** | Computes pore pressure magnitudes |
+| **Pore_pressure.py** | Computes pore pressure magnitudes |
 | **Stratigraphy.py** | Models stratigraphic sequences and properties |
 | **Trajectory.py** | Processes wellbore deviation surveys |
 | **Utils.py** | File I/O |
 | **runner.py** | Orchestrates module execution and data flow |
-
