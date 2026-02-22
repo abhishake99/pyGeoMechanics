@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import Utils as ut
 
 from Ingestion import Ingestor
 from Preprocessing import PreProcessor
@@ -27,15 +28,17 @@ def run_geomechanics(
     data_model = Ingestor(folder_path=las_folder_path)
     processor = PreProcessor(ingestion_key=data_model.ingestion_key)
     merged_df = processor.merged_df
+    ut.make_folder()
 
     # TVD Generation
     try:
-        tvd_df = pd.read_csv(tvd_csv_path)
+        tvd_df = pd.read_csv(f'Data/{tvd_csv_path}')
     except FileNotFoundError:
         traj_df = pd.read_csv(trajectory_file_path)
         trajectory_object = Trajectory_calculator(trajectory_df=traj_df)
         tvd_df = trajectory_object.calculate_tvd(depth_smaple_rate=tvd_sample_rate, merged_df=merged_df, rkb=rkb)
         tvd_df['DEPT'] = tvd_df['MD'].round(2)
+        
         tvd_df.to_csv(f'Data/{tvd_csv_path}', index=False)
     merged_df = pd.merge(left=merged_df, right=tvd_df[['DEPT', 'TVDRT']], how='left', on='DEPT')
 
