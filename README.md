@@ -80,10 +80,10 @@ The application executes the following sequence:
 
 ### Output Examples
 
-- **Stratigraphy**: ![Stratigraphy](Data/Statigraphy.png)
-- **Overburden Stress**: ![Overburden Stress](Data/overburden_stress.png)
-- **Normal Compaction Trend**: ![Normal Compaction Trend](Data/nct.png)
-- **Pore Pressure**: ![Pore Pressure](Data/pore_pressure.png)
+- **Stratigraphy**: ![Stratigraphy](Images/Statigraphy.png)
+- **Overburden Stress**: ![Overburden Stress](Images/overburden_stress.png)
+- **Normal Compaction Trend**: ![Normal Compaction Trend](Images/nct.png)
+- **Pore Pressure**: ![Pore Pressure](Images/pore_pressure.png)
 
 ## Module Reference
 
