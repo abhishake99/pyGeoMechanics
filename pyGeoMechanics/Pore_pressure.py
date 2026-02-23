@@ -177,7 +177,7 @@ class PorePressurePredictor:
             return shale_df[[depth_col,'nct_val']]
 
 
-        def get_nct_poly(shale_df:pd.DataFrmae,degree:int = 2, depth_col = 'DEPT', dtco_col = 'DTCO_merged'):
+        def get_nct_poly(shale_df:pd.DataFrame,degree:int = 2, depth_col = 'DEPT', dtco_col = 'DTCO_merged'):
 
             shale_df = shale_df.copy()
 
