@@ -8,7 +8,6 @@ The `pyGeoMechanics` library is a Python-based solution for geomechanical comput
 
 ```
 Custom_library/
-├── executor.py          # Application entry point
 ├── runner.py            # Workflow orchestrator
 ├── Ingestion.py         # Data ingestion and parsing
 ├── Preprocessing.py     # Data cleaning and preparation
@@ -25,7 +24,8 @@ Custom_library/
 ### 1. Install Dependencies
 
 ```bash
-pip install -r requirements.txt
+pip install git+https://github.com/abhishake99/pyGeoMechanics.git
+
 ```
 
 ### 2. Configuration Parameters
@@ -34,7 +34,7 @@ The `executor.py` script accepts the following parameters:
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `las_folder_path` | str | Directory containing LAS files |
+| `las_folder_path` | str | Directory containing LAS files, **Note:** please provide the unprocessed/raw LAS files only. |
 | `trajectory_file_path` | str | CSV file path with columns: md, azi, inc |
 | `tvd_csv_path` | str | Output filename for TVD data |
 | `rkb` | float | Rotary Kelly bushing elevation (m) |
@@ -64,8 +64,11 @@ The `executor.py` script accepts the following parameters:
 
 ### 3. Execution Workflow
 
-```bash
-python executor.py
+```python 
+from pyGeoMechanics.runner import run_geomechanics
+
+run_geomechanics(las_folder_path=r"...\2. Well Logs\BRK012 Raw Logs",
+        trajectory_file_path=r'...\BRK012_Survey _wellpathy.csv')
 ```
 
 The application executes the following sequence:
