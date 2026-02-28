@@ -25,14 +25,14 @@ def run_geomechanics(
     outlier_ranges=None
 ):
     # Data Loading
-    data_model = Ingestor(folder_path=las_folder_path)
-    processor = PreProcessor(ingestion_key=data_model.ingestion_key)
-    merged_df = processor.merged_df
-    ut.make_folder()
+    data_model = Ingestor(folder_path=las_folder_path) # Creates a dictionary from LAS files
+    processor = PreProcessor(ingestion_key=data_model.ingestion_key) # Merges Logs and also holds other data preparation functions like despiking, interpolation, smoothing, outlier removal
+    merged_df = processor.merged_df # Merged DataFrame
+    ut.make_folder() # Creating "Data" folder in the current directory
 
     # TVD Generation
     try:
-        tvd_df = pd.read_csv(f'Data/{tvd_csv_path}')
+        tvd_df = pd.read_csv(f'Data/{tvd_csv_path}')  # Reads the TVD csv file if present else it calculates the TVD using the md, azi, inc columns
     except FileNotFoundError:
         traj_df = pd.read_csv(trajectory_file_path)
         trajectory_object = Trajectory_calculator(trajectory_df=traj_df)
@@ -40,7 +40,7 @@ def run_geomechanics(
         tvd_df['DEPT'] = tvd_df['MD'].round(2)
         
         tvd_df.to_csv(f'Data/{tvd_csv_path}', index=False)
-    merged_df = pd.merge(left=merged_df, right=tvd_df[['DEPT', 'TVDRT']], how='left', on='DEPT')
+    merged_df = pd.merge(left=merged_df, right=tvd_df[['DEPT', 'TVDRT']], how='left', on='DEPT') 
 
     # Data Processing
     working_df = merged_df[['DEPT', 'TVDRT', 'DTCO_merged', 'RHOB_merged', 'GR_merged', 'DTSM_merged']].copy()
