@@ -44,6 +44,7 @@ The `executor.py` script accepts the following parameters:
 | `gap_fill_method` | str | Density interpolation: `'exponential'` or `'linear'` |
 | `nct_type` | str | Normal compaction trend: `'semilog'` or `'poly'` |
 | `outlier_ranges` | dict | Valid ranges for log curves |
+| `folder_name` | str | Folder name where you want to save outputs
 
 #### Example Configuration
 

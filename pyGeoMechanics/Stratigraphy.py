@@ -8,12 +8,13 @@ import matplotlib.patches as mpatches
 warnings.filterwarnings('ignore')
 
 class Stratigraphy():
-    def __init__(self, data_frame=None, depth_col='DEPT', gamma_ray_col=None, dtco_column=None):
+    def __init__(self, data_frame=None, depth_col='DEPT', gamma_ray_col=None, dtco_column=None,folder_name="Data"):
         self.gamma_ray_col = gamma_ray_col
         self.dtco_col = dtco_column
         self.depth_col = depth_col
         # Create a copy to avoid SettingWithCopy warnings on the original DF later
         self.data_frame = data_frame[[depth_col, self.gamma_ray_col, self.dtco_col,'TVDRT']].copy()
+        self.folder_name = folder_name
 
     def method_1_input_based(self, intervals=None):
         def assign_strat_code(depth, intervals):
@@ -130,6 +131,6 @@ class Stratigraphy():
 
         ax.legend(loc='upper right', fontsize=8)
 
-        plt.savefig('Data/Statigraphy.png')
+        plt.savefig(f'{self.folder_name}/Statigraphy.png')
         plt.tight_layout()
         plt.show()

@@ -44,11 +44,12 @@ class Trajectory_calculator():
         self.trajectory_df = pd.concat([self.trajectory_df,new_df2], ignore_index=True)
         self.trajectory_df = self.trajectory_df.astype(float)
         self.trajectory_df = self.trajectory_df.apply(pd.to_numeric, errors='coerce')
+        self.trajectory_df.drop_duplicates(subset=['md'],inplace=True)
         self.trajectory_df.to_csv('BRK012_wellpath.csv',index=False)
 
         md, inc, azi = wp.read_csv('BRK012_wellpath.csv')
 
-        os.remove('BRK012_wellpath.csv')
+        # os.remove('BRK012_wellpath.csv')
 
         dev = wp.deviation(md, inc, azi)
 

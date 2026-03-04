@@ -6,7 +6,7 @@ import matplotlib.gridspec as gridspec
 
 class OverburdensStressCalculator:
     def __init__(self, df, depth_col='DEPT', density_col='RHOB_merged', 
-                 area_type='onshore', water_depth=0, surface_density=None):
+                 area_type='onshore', water_depth=0, surface_density=None,folder_name="Data"):
         """
         Initialize the calculator.
         
@@ -25,6 +25,7 @@ class OverburdensStressCalculator:
         self.density_col = density_col
         self.area_type = area_type.lower()
         self.water_depth = water_depth
+        self.folder_name = folder_name
         
         # Set default surface densities
         if surface_density is None:
@@ -252,7 +253,7 @@ class OverburdensStressCalculator:
             ax3.grid(True, alpha=0.4, linestyle=':', linewidth=0.8)
         
         plt.suptitle('Well Log - Overburden Stress Analysis', fontsize=13, fontweight='bold', y=0.995)
-        plt.savefig('Data/overburden_stress.png')
+        plt.savefig(f'{self.folder_name}/overburden_stress.png')
         plt.tight_layout()
         plt.show()
     

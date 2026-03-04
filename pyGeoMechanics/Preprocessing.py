@@ -304,3 +304,8 @@ class PreProcessor():
                 print(method,e)
         else:
             print(f"{method} not in available methods list",methods)
+            
+    def generate_log(self,log_name:str,data_frame:pd.DataFrame):
+        if log_name == 'DTSM_merged':
+            values = (304.8*data_frame['DTCO_merged'])/(267.768 - (1.172 * data_frame['DTCO_merged'])) # Castagna(Mudrock line) Relationship
+            return values

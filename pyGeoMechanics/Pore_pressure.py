@@ -17,6 +17,7 @@ class PorePressurePredictor:
                  stratigraphy_df = None, 
                  strat_method = '3',
                  nct_type = None,
+                 folder_name = "Data"
 
             ):
         # self.use_tvd = use_tvd
@@ -25,6 +26,7 @@ class PorePressurePredictor:
         self.final_df = df
         self.depth_col = depth_col 
         self.nct_type = nct_type
+        self.folder_name = folder_name
 
         # For nct calculation
         if strat_method == '3':
@@ -169,7 +171,7 @@ class PorePressurePredictor:
 
             ax.tick_params(axis='x', which='major', length=6)
             ax.tick_params(axis='x', which='minor', length=3)
-            plt.savefig('Data/nct.png')
+            plt.savefig(f'{self.folder_name}/nct.png')
             plt.show()
 
             shale_df.loc[mask, 'nct_val'] = y_fit
@@ -204,6 +206,7 @@ class PorePressurePredictor:
             # plt.plot(x_clean, y_clean, alpha=0.4, label="Data")
             plt.plot(x_clean, poly(x_clean), color='red', linewidth=2, label="Polynomial fit")
             plt.legend()
+            plt.savefig(f'{self.folder_name}/nct.png')
             plt.show()
 
             shale_df.loc[mask, 'nct_val'] = poly(x_clean)
@@ -260,6 +263,7 @@ class PorePressurePredictor:
             plt.gca().invert_yaxis()
 
             plt.tight_layout()
+            plt.savefig(f'{self.folder_name}/nct.png')
             plt.show()
 
             shale_df.loc[mask, 'nct_val'] = y_predicted
@@ -366,7 +370,7 @@ class PorePressurePredictor:
         except Exception as e:
             print(print(e))
             
-        ut.save_csv(filename='generated_data',dataframe=self.pore_pressure_df)
+        ut.save_csv(filename='generated_data',dataframe=self.pore_pressure_df,folder_name=self.folder_name)
 
     def plot_pore_pressure(self):
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 10))
@@ -406,7 +410,7 @@ class PorePressurePredictor:
         ax2.grid(True, alpha=0.3)
         
         ut.make_folder()
-        plt.savefig('Data/pore_pressure.png')
+        plt.savefig(f'{self.folder_name}/pore_pressure.png')
         plt.tight_layout()
         plt.show()
 

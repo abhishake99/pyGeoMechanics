@@ -22,29 +22,38 @@ def run_geomechanics(
     overburden_units=['psi', 'mpa'],
     strat_method='3',
     nct_type='semilog',
-    outlier_ranges=None
+    outlier_ranges=None,
+    folder_name="Data"
 ):
     # Data Loading
     data_model = Ingestor(folder_path=las_folder_path) # Creates a dictionary from LAS files
     processor = PreProcessor(ingestion_key=data_model.ingestion_key) # Merges Logs and also holds other data preparation functions like despiking, interpolation, smoothing, outlier removal
     merged_df = processor.merged_df # Merged DataFrame
-    ut.make_folder() # Creating "Data" folder in the current directory
+    ut.make_folder(folder_name=folder_name) # Creating "Data" folder in the current directory
 
     # TVD Generation
     try:
-        tvd_df = pd.read_csv(f'Data/{tvd_csv_path}')  # Reads the TVD csv file if present else it calculates the TVD using the md, azi, inc columns
+        tvd_df = pd.read_csv(f'{folder_name}/{tvd_csv_path}')  # Reads the TVD csv file if present else it calculates the TVD using the md, azi, inc columns
     except FileNotFoundError:
         traj_df = pd.read_csv(trajectory_file_path)
         trajectory_object = Trajectory_calculator(trajectory_df=traj_df)
         tvd_df = trajectory_object.calculate_tvd(depth_smaple_rate=tvd_sample_rate, merged_df=merged_df, rkb=rkb)
         tvd_df['DEPT'] = tvd_df['MD'].round(2)
         
-        tvd_df.to_csv(f'Data/{tvd_csv_path}', index=False)
+        tvd_df.to_csv(f'{folder_name}/{tvd_csv_path}', index=False)
     merged_df = pd.merge(left=merged_df, right=tvd_df[['DEPT', 'TVDRT']], how='left', on='DEPT') 
 
     # Data Processing
-    working_df = merged_df[['DEPT', 'TVDRT', 'DTCO_merged', 'RHOB_merged', 'GR_merged', 'DTSM_merged']].copy()
-    processing_cols = ['DTCO_merged', 'RHOB_merged', 'GR_merged', 'DTSM_merged']
+    working_df = merged_df[['DEPT', 'TVDRT']].copy()
+    
+    # Missing Data generation
+    processing_cols = ['DTCO_merged', 'RHOB_merged', 'DTSM_merged', 'GR_merged']
+    for col in processing_cols:
+        if col in merged_df.columns:
+            working_df[col] = merged_df[col]
+        else:
+            working_df[col] = processor.generate_log(col,working_df)
+            
     # Default outlier ranges
     default_ranges = {
         'DTCO_merged': (40, 150),
@@ -103,7 +112,7 @@ def run_geomechanics(
     # Stratigraphy Calculation
     if geological_zones is None:
         geological_zones = {"ZONE_1": {"dept": (0, 5000), "gr": (25, 120)}}
-    strat = Stratigraphy(data_frame=working_df, gamma_ray_col='GR_merged', dtco_column='DTCO_merged', depth_col='DEPT')
+    strat = Stratigraphy(data_frame=working_df, gamma_ray_col='GR_merged', dtco_column='DTCO_merged', depth_col='DEPT',folder_name=folder_name)
     strat.method_3_vclay_based(geological_zones=geological_zones)
     strat.generate_band(method=strat_method)
 
@@ -113,7 +122,8 @@ def run_geomechanics(
         rhob_df,
         depth_col='TVDRT',
         density_col='RHOB_merged',
-        area_type=area_type
+        area_type=area_type,
+        folder_name=folder_name
     )
     result_onshore = calc_onshore.calculate(gap_fill_method=gap_fill_method, units=overburden_units)
     calc_onshore.plot_welllog_style(result_onshore)
@@ -125,7 +135,8 @@ def run_geomechanics(
         stratigraphy_df=strat.data_frame,
         strat_method=strat_method,
         nct_type=nct_type,
-        depth_col='TVDRT'
+        depth_col='TVDRT',
+        folder_name=folder_name
     )
     return {
         "working_df": working_df,
